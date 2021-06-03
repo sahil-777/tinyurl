@@ -1,15 +1,14 @@
 const express = require('express');
-const dotenv =require('dotenv');
-dotenv.config();
-
-const PORT = process.env.PORT;
+const dotenv = require('dotenv');
+let routes = require('./routes/index');
 
 let app = express();
 
-app.get('/',async(req,res)=>{
-    return res.send('Hiiiiiiiiiiiiiii');
-})
+app.use(express.json({}));
+dotenv.config();
+app.use('/', routes);
 
-app.listen(PORT,async (err) =>{
-    console.log('Server is running on localhost:'+PORT);
+const PORT = process.env.PORT;
+app.listen(PORT, async (err) => {
+    console.log('Server is running on localhost:' + PORT);
 });
