@@ -4,7 +4,7 @@ let getLongURL = require('../api/getLongUrl')
 let getShortURL = require('../api/getShortUrl')
 
 router.get('/', async (req, res) => {
-    return res.send('home-page');
+    return res.render('index');
 })
 
 router.get('/:shortKey', async (req, res) => {

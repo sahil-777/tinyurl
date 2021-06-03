@@ -1,9 +1,17 @@
 const express = require('express');
 const dotenv = require('dotenv');
-let routes = require('./routes/index');
+const bodyParser = require('body-parser');
+const routes = require('./routes/index');
+const path = require('path');
 
 let app = express();
 
+app.set("views", path.join(__dirname, "views"));
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 app.use(express.json({}));
 dotenv.config();
 app.use('/', routes);

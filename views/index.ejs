@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinyUrl</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+        }
+        html {
+            display: table;
+            margin: auto;
+        }
+        body {
+            display: table-cell;
+            vertical-align: middle;
+        }
+    </style>
+    <script>
+        function getShortUrl() {
+            let longUrl = document.getElementById('input-output').value
+            $.ajax({
+                type: "POST",
+                url: 'http://localhost:3000/api/getShortUrl',
+                data: {
+                    'longUrl': longUrl
+                },
+                success: function (responseData) {
+                    let shortUrl = responseData.shortUrl;
+                    //alert("got response as " + shortUrl);
+                    console.log(shortUrl);
+                    document.getElementById('input-output').value = shortUrl
+                    document.getElementById('main-btn').innerText = 'Copy'
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+    <input id="input-output" type="url" autocomplete="off" size="80">
+    <button id="main-btn" onclick="getShortUrl()">Shorten</button>
+</body>
+</html>
+
