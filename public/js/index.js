@@ -1,21 +1,31 @@
 function getShortUrl() {
     let longUrl = document.getElementById('input-output').value
-    $.ajax({
-        type: "POST",
-        url: 'http://localhost:3000/api/getShortUrl',
-        data: {
-            'longUrl': longUrl
-        },
-        success: function (responseData) {
-            let shortUrl = responseData.shortUrl;
-            document.getElementById('input-output').value = shortUrl
-            document.getElementById('copy-btn').hidden = false
-            document.getElementById('shorten-btn').hidden = true
 
-            document.getElementById('check-btn').hidden = false
-            document.getElementById('shorten-another-btn').hidden = false
-        }
-    })
+    if (isURLValid(longUrl)) { //check if url is valid or not
+
+        $.ajax({
+            type: "POST",
+            url: 'http://localhost:3000/api/getShortUrl',
+            data: {
+                'longUrl': longUrl
+            },
+            success: function (responseData) {
+                let shortUrl = responseData.shortUrl;
+                document.getElementById('input-output').value = shortUrl
+                document.getElementById('copy-btn').hidden = false
+                document.getElementById('shorten-btn').hidden = true
+
+                document.getElementById('check-btn').hidden = false
+                document.getElementById('shorten-another-btn').hidden = false
+            }
+        })
+
+    } else {
+        document.getElementById('error-msg').innerText = 'Please,enter valid url'
+        setTimeout(() => {
+            document.getElementById('error-msg').innerText = '';
+        }, 2500)
+    }
 }
 
 function goToUrl() {
@@ -30,4 +40,14 @@ function copyToClipboard(element) {
     document.execCommand("copy");
     $temp.remove();
     document.getElementById('copy-btn').innerText = 'Copied'
+}
+
+function isURLValid(url) {
+    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+    return !!pattern.test(url);
 }
