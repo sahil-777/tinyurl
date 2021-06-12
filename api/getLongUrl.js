@@ -4,8 +4,8 @@ let router = express.Router()
 let AWS = require('../config/aws-config')
 let docClient = new AWS.DynamoDB.DocumentClient();
 
-async function fetchOneByKey(shortKey,mainAddress) {
-    if (shortKey == 'favicon.ico') {
+async function fetchOneByKey(shortKey, mainAddress) {
+    if (shortKey == 'favicon.ico' || shortKey == '') {
         return mainAddress
     }
     let params = {
@@ -14,31 +14,34 @@ async function fetchOneByKey(shortKey,mainAddress) {
             "shortURLkey": shortKey
         }
     };
-    let s;
+    let response;
     try {
-        s = await docClient.get(params).promise()
+        response = await docClient.get(params).promise()
     } catch (error) {
         console.log(error.code)
         console.log(error.statusCode)
-        //return link to error page with status code & appropriate msg
+        return mainAddress + '/msg/error'
     }
-    if (!s || !s.Item)
-        return
+    if (!response || !response.Item)
+        return mainAddress + '/msg/error'
     else
-        return s.Item.longURL
+        return response.Item.longURL
 }
 
 router.get('/api/getLongUrl/:shortKey', async (req, res) => {
 
     let mainAddress = req.protocol + '://' + req.get('host')
     let shortKey = req.params.shortKey
-    let longUrlFromDB = await fetchOneByKey(shortKey,mainAddress);
-    let longUrl = (longUrlFromDB ? longUrlFromDB : 'linkToErrorPage')
-    console.log('\n\n')
-    console.log('shortKey =>', shortKey)
-    console.log('longURL =>', longUrl)
+    let longURL = ''
+    try {
+        let longUrlFromDB = await fetchOneByKey(shortKey, mainAddress);
+        longURL = longUrlFromDB
+    } catch (error) {
+        longURL = mainAddress + '/msg/error'
+    }
+
     return res.status(200).json({
-        'longUrl': longUrl
+        'longUrl': longURL
     });
 })
 
