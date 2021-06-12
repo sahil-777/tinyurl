@@ -1,4 +1,6 @@
 let AWS = require("aws-sdk");
+let dotenv = require("dotenv");
+dotenv.config();
 
 let awsConfig = {
     "region": process.env.REGION,
