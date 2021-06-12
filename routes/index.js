@@ -1,4 +1,6 @@
 const express = require('express');
+const axios = require('axios')
+
 let router = express.Router()
 let getLongURL = require('../api/getLongUrl')
 let getShortURL = require('../api/getShortUrl')
@@ -8,8 +10,9 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:shortKey', async (req, res) => {
-    //return res.send(req.params.shortKey)
-    let longUrl = 'https://www.google.com';
+    let shortKey = req.params.shortKey;
+    let response = await axios.get('http://localhost:3000/api/getLongUrl/' + shortKey)
+    let longUrl = response.data.longUrl;
     return res.redirect(longUrl)
 })
 
