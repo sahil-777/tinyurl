@@ -20,7 +20,7 @@ async function fetchOneByKey(shortKey, mainAddress) {
     } catch (error) {
         console.log(error.code)
         console.log(error.statusCode)
-        return mainAddress + '/msg/error'
+        return -1
     }
     if (!response || !response.Item)
         return mainAddress + '/msg/error'
@@ -33,15 +33,19 @@ router.get('/api/getLongUrl/:shortKey', async (req, res) => {
     let mainAddress = req.protocol + '://' + req.get('host')
     let shortKey = req.params.shortKey
     let longURL = ''
-    try {
-        let longUrlFromDB = await fetchOneByKey(shortKey, mainAddress);
-        longURL = longUrlFromDB
-    } catch (error) {
-        longURL = mainAddress + '/msg/error'
+
+    let longUrlFromDB = await fetchOneByKey(shortKey, mainAddress);
+    longURL = longUrlFromDB
+    if (longURL == -1) {
+        return res.status(500).json({
+            'longUrl': 'NA',
+            'msg': 'Internal Server Error, Please try again later'
+        })
     }
 
     return res.status(200).json({
-        'longUrl': longURL
+        'longUrl': longURL,
+        'msg':'Everything is working successfully'
     });
 })
 

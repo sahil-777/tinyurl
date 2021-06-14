@@ -14,9 +14,15 @@ function getShortUrl() {
                 document.getElementById('input-output').value = shortUrl
                 document.getElementById('copy-btn').hidden = false
                 document.getElementById('shorten-btn').hidden = true
-
                 document.getElementById('check-btn').hidden = false
                 document.getElementById('shorten-another-btn').hidden = false
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                //console.log(textStatus + ": " + jqXHR.status + " " + errorThrown);
+                document.getElementById('error-msg').innerText = errorThrown + '. Please, try again later'
+                setTimeout(() => {
+                    document.getElementById('error-msg').innerText = '';
+                }, 2500)
             }
         })
 

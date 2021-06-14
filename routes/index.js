@@ -13,15 +13,14 @@ router.get('/:shortKey', async (req, res) => {
     let shortKey = req.params.shortKey;
     let longURL = ''
     let mainAddress = req.protocol + '://' + req.get('host')
+
     try {
-        let response = await axios.get('http://localhost:3000/api/getLongUrl/' + shortKey)
-        longUrl = response.data.longUrl;
+        let response = await axios.get(mainAddress+'/api/getLongUrl/' + shortKey)
+        longURL = response.data.longUrl;
     } catch (error) {
-        console.log(error.code)
-        console.log(error.statusCode)
         longURL = mainAddress + '/msg/error'
     }
-    return res.redirect(longUrl)
+    return res.redirect(longURL)
 })
 
 router.get('/msg/error', async (req, res) => {

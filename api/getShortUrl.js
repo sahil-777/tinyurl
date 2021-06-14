@@ -86,7 +86,7 @@ router.post('/api/getShortUrl', async (req, res) => {
     let shortUrl = req.protocol + "://" + req.get('host') + '/' + shortKey
     return res.status(200).json({
         'shortUrl': shortUrl,
-        'msg': 'Everything working'
+        'msg': 'Everything is working successfully'
     });
 })
 
