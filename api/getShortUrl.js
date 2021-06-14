@@ -9,7 +9,7 @@ async function getCounter() {
     let params = {
         TableName: "urlMapper",
         Key: {
-            "shortURLkey": "1cnt"
+            "shortURLkey": "cnt"
         },
         UpdateExpression: "ADD val :val",
         ExpressionAttributeValues: {
@@ -17,7 +17,15 @@ async function getCounter() {
         },
         ReturnValues: "UPDATED_NEW"
     };
-    let response = await docClient.update(params).promise();
+    let response;
+    try {
+        response = await docClient.update(params).promise()
+    } catch (error) {
+        console.log('Error in fetching counter value from db')
+        console.log(error.code)
+        console.log(error.statusCode)
+        return -1
+    }
     let cnt = response.Attributes.val
     return cnt
 }
@@ -25,7 +33,9 @@ async function getCounter() {
 async function giveShortKey() {
     let shortKey = ''
     let cnt = await getCounter()
-    
+    if (cnt == -1) {
+        return '-1'
+    }
     //Using very basic technique, 
     //not my main focus as of now
     let md5HashValue = md5(cnt)
@@ -42,18 +52,41 @@ async function insertShortKey(shortKey, longURL) {
             "longURL": longURL
         }
     };
-    docClient.put(params).promise();
+    let responce;
+    try {
+        responce = await docClient.put(params).promise()
+    } catch (error) {
+        console.log('Error in inserting short key')
+        console.log(error.code)
+        console.log(error.statusCode)
+        return -1
+    }
+    return 1;
 }
 
 router.post('/api/getShortUrl', async (req, res) => {
     let longURL = req.body.longUrl
 
     let shortKey = await giveShortKey()
-    insertShortKey(shortKey, longURL)
+    if (shortKey == '-1') {
+        return res.status(500).json({
+            'shortUrl': 'NA',
+            'msg': 'Internal Server Error, Please try again later'
+        });
+    }
+
+    let responce = await insertShortKey(shortKey, longURL)
+    if (responce == -1) {
+        return res.status(500).json({
+            'shortUrl': 'NA',
+            'msg': 'Internal Server Error, Please try again later'
+        });
+    }
 
     let shortUrl = req.protocol + "://" + req.get('host') + '/' + shortKey
     return res.status(200).json({
         'shortUrl': shortUrl,
+        'msg': 'Everything working'
     });
 })
 
