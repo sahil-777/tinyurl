@@ -23,7 +23,7 @@ async function fetchOneByKey(shortKey, mainAddress) {
         return -1
     }
     if (!response || !response.Item)
-        return mainAddress + '/msg/error'
+        return -1
     else
         return response.Item.longURL
 }
