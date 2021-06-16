@@ -22,10 +22,11 @@ async function fetchOneByKey(shortKey, mainAddress) {
         console.log(error.statusCode)
         return -1
     }
-    if (!response || !response.Item)
+    if (!response || !response.Item) {
         return -1
-    else
+    } else {
         return response.Item.longURL
+    }
 }
 
 router.get('/api/getLongUrl/:shortKey', async (req, res) => {
