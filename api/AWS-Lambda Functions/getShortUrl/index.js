@@ -1,31 +1,99 @@
 const AWS = require('aws-sdk');
-const ddb = new AWS.DynamoDB.DocumentClient({
+const docClient = new AWS.DynamoDB.DocumentClient({
     region: 'us-east-1'
 });
 
-const md5 = require('md5')
+const md5 = require('md5');
 
-exports.handler = async (event, context, callback) => {
-    let longURL = 'https://www.sample.com/';
-    await createMessage(longURL).then(() => {
-        callback(null, {
-            statusCode: 201,
-            body: JSON.stringify(JSON.parse(event.body))
-        });
-    }).catch((err) => {
-        console.error(err);
-    });
-};
+async function getCounter() {
+    let params = {
+        TableName: "urlMapper",
+        Key: {
+            "shortURLkey": "cnt"
+        },
+        UpdateExpression: "ADD val :val",
+        ExpressionAttributeValues: {
+            ":val": 1
+        },
+        ReturnValues: "UPDATED_NEW"
+    };
+    let response;
+    try {
+        response = await docClient.update(params).promise();
+    } catch (error) {
+        console.log('Error in fetching counter value from db');
+        console.log(error.code);
+        console.log(error.statusCode);
+        return -1;
+    }
+    let cnt = response.Attributes.val;
+    return cnt;
+}
 
-function createMessage(longURL) {
-    let md5HashValue = md5(longURL);
-    let shortKey = md5HashValue.slice(0, 7);
-    const params = {
-        TableName: 'urlMapper',
+async function insertShortKey(shortKey, longURL) {
+    let params = {
+        TableName: "urlMapper",
         Item: {
-            'shortURLkey': shortKey,
-            'longURL': longURL
+            "shortURLkey": shortKey,
+            "longURL": longURL
         }
     };
-    return ddb.put(params).promise();
+    let responce;
+    try {
+        responce = await docClient.put(params).promise();
+    } catch (error) {
+        console.log('Error in inserting short key');
+        console.log(error.code);
+        console.log(error.statusCode);
+        return -1;
+    }
+    return 1;
 }
+
+async function giveShortKey() {
+    let shortKey = '';
+    let cnt = await getCounter();
+    if (cnt == -1) {
+        return '-1';
+    }
+    //Using very basic technique, 
+    //not my main focus as of now
+    let md5HashValue = md5(cnt);
+    shortKey = md5HashValue.slice(7, 14);
+
+    return shortKey;
+}
+
+async function getResponse(longURL) {
+    let shortKey = await giveShortKey();
+    if (shortKey == '-1') {
+        return {
+            statusCode: 500,
+            shortKey: 'NA',
+            msg: 'Internal Server Error, Please try again later'
+        };
+    }
+
+    let responce = await insertShortKey(shortKey, longURL);
+    if (responce == -1) {
+        return {
+            statusCode: 500,
+            shortKey: 'NA',
+            msg: 'Internal Server Error, Please try again later'
+        };
+    }
+
+    return {
+        statusCode: 201,
+        shortKey: shortKey,
+        msg: 'Everything is working successfully'
+    };
+}
+
+exports.handler = async (event) => {
+    let longURL = JSON.parse(event.body).longURL;
+    let responce = await getResponse(longURL);
+    return {
+        body: JSON.stringify(responce)
+    };
+};
