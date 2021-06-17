@@ -1,3 +1,9 @@
+// API ENDPOINT : https://99dk65tgz5.execute-api.us-east-1.amazonaws.com/api/getshorturl
+// POST Request JSON format:
+// {
+//     "longURL":"LONGURL_INPUT"
+// } 
+
 const AWS = require('aws-sdk');
 const docClient = new AWS.DynamoDB.DocumentClient({
     region: 'us-east-1'
