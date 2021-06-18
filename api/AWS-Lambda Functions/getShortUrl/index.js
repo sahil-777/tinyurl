@@ -1,9 +1,3 @@
-// API ENDPOINT : https://99dk65tgz5.execute-api.us-east-1.amazonaws.com/api/getshorturl
-// POST Request JSON format:
-// {
-//     "longURL":"LONGURL_INPUT"
-// } 
-
 const AWS = require('aws-sdk');
 const docClient = new AWS.DynamoDB.DocumentClient({
     region: 'us-east-1'
@@ -76,7 +70,10 @@ async function getResponse(longURL) {
         return {
             statusCode: 500,
             shortKey: 'NA',
-            msg: 'Internal Server Error, Please try again later'
+            msg: 'Internal Server Error',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            }
         };
     }
 
@@ -85,14 +82,20 @@ async function getResponse(longURL) {
         return {
             statusCode: 500,
             shortKey: 'NA',
-            msg: 'Internal Server Error, Please try again later'
+            msg: 'Internal Server Error',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            }
         };
     }
 
     return {
         statusCode: 201,
         shortKey: shortKey,
-        msg: 'Everything is working successfully'
+        msg: 'Everything is working successfully',
+        headers: {
+                'Access-Control-Allow-Origin': '*',
+        }
     };
 }
 
@@ -100,6 +103,9 @@ exports.handler = async (event) => {
     let longURL = JSON.parse(event.body).longURL;
     let responce = await getResponse(longURL);
     return {
-        body: JSON.stringify(responce)
+        body: JSON.stringify(responce),
+        headers: {
+                'Access-Control-Allow-Origin': '*',
+        }
     };
 };
