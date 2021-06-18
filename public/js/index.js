@@ -10,15 +10,25 @@ function getShortUrl() {
                 'longUrl': longUrl
             },
             success: function (responseData) {
-                let shortUrl = responseData.shortUrl;
-                document.getElementById('input-output').value = shortUrl
-                document.getElementById('copy-btn').hidden = false
-                document.getElementById('shorten-btn').hidden = true
-                document.getElementById('check-btn').hidden = false
-                document.getElementById('shorten-another-btn').hidden = false
+                if(responseData.statusCode==201){
+                    let shortKey = responseData.shortKey;
+                    let shortURL = 'http://localhost:3000/'+shortKey
+                    document.getElementById('input-output').value = shortURL
+                    document.getElementById('copy-btn').hidden = false
+                    document.getElementById('shorten-btn').hidden = true
+                    document.getElementById('check-btn').hidden = false
+                    document.getElementById('shorten-another-btn').hidden = false
+                }
+                else{
+                    let errorMsg = responseData.msg
+                    document.getElementById('error-msg').innerText = errorMsg + '. Please, try again later'
+                    setTimeout(() => {
+                        document.getElementById('error-msg').innerText = '';
+                    }, 2500)   
+                }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                //console.log(textStatus + ": " + jqXHR.status + " " + errorThrown);
+                console.log(textStatus + ": " + jqXHR.status + " " + errorThrown);
                 document.getElementById('error-msg').innerText = errorThrown + '. Please, try again later'
                 setTimeout(() => {
                     document.getElementById('error-msg').innerText = '';
