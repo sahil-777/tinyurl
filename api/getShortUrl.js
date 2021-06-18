@@ -1,5 +1,6 @@
 const express = require('express')
 const md5 = require('md5')
+const axios = require('axios')
 let router = express.Router()
 
 let AWS = require('../config/aws-config')
@@ -52,9 +53,9 @@ async function insertShortKey(shortKey, longURL) {
             "longURL": longURL
         }
     };
-    let responce;
+    let response;
     try {
-        responce = await docClient.put(params).promise()
+        response = await docClient.put(params).promise()
     } catch (error) {
         console.log('Error in inserting short key')
         console.log(error.code)
@@ -66,7 +67,7 @@ async function insertShortKey(shortKey, longURL) {
 
 router.post('/api/getShortUrl', async (req, res) => {
     let longURL = req.body.longUrl
-
+    
     let shortKey = await giveShortKey()
     if (shortKey == '-1') {
         return res.status(500).json({
@@ -75,8 +76,8 @@ router.post('/api/getShortUrl', async (req, res) => {
         });
     }
 
-    let responce = await insertShortKey(shortKey, longURL)
-    if (responce == -1) {
+    let response = await insertShortKey(shortKey, longURL)
+    if (response == -1) {
         return res.status(500).json({
             'shortUrl': 'NA',
             'msg': 'Internal Server Error, Please try again later'
@@ -88,6 +89,7 @@ router.post('/api/getShortUrl', async (req, res) => {
         'shortUrl': shortUrl,
         'msg': 'Everything is working successfully'
     });
+
 })
 
 module.exports = router;
