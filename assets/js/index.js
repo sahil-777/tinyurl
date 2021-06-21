@@ -56,7 +56,7 @@ async function getShortUrl() {
 async function getLongURL(shortURL) {
     //let url = document.getElementById('input-output').value;
     //window.open(longURL) //will be opened in new tab
-    let mainAddress = shortURL.split('?')[0]
+    let mainAddress = 'https://sahil-777.github.io/tinyurl/' //Bug => shortURL.split('?')[0]
     let shortKey = shortURL.split('?')[1]
     //console.log(shortKey)
     let longURL = ''
