@@ -66,11 +66,9 @@ async function getLongURL(shortURL) {
             longURL = response.data.longUrl;
         else {
             longURL = mainAddress + 'error-page.html'
-            return
         }
     } catch (error) {
         longURL = mainAddress + 'error-page.html'
-        return
     }
     return longURL;
 }
