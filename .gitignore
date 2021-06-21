@@ -1,6 +1,3 @@
-.env
-node_modules
-package-lock.json
 .idea/
 api/AWS-Lambda Functions/getShortUrl/node_modules
 api/AWS-Lambda Functions/getShortUrl/package-lock.json
