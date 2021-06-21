@@ -21,7 +21,7 @@ async function getShortUrl() {
         response=response.data
         if(response.statusCode==201){
             let shortKey = response.shortKey;
-            let shortURL = 'http://localhost:3000/'+shortKey
+            let shortURL = window.location.href+'/'+shortKey
             document.getElementById('input-output').value = shortURL
             document.getElementById('copy-btn').hidden = false
             document.getElementById('shorten-btn').hidden = true
