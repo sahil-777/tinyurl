@@ -3,7 +3,8 @@ async function initiate() {
     let shortKey = location.href.split('?')[1]
     console.log(shortKey)
     if (shortKey) {
-        await goToUrl(location.href)
+        let longURL = await getLongURL(location.href)
+        window.location = longURL
     }
 }
 
@@ -30,9 +31,9 @@ async function getShortUrl() {
         response = response.data
         if (response.statusCode == 201) {
             let shortKey = response.shortKey;
-            let shortURL = "https://sahil-777.github.io/tinyurl/"+ '?' + shortKey // Add '/', if u r running locally
+            let shortURL = "https://sahil-777.github.io/tinyurl/" + '?' + shortKey // Add '/', if u r running locally
             //window.location.href can produce bug
-            
+
             document.getElementById('input-output').value = shortURL
             document.getElementById('copy-btn').hidden = false
             document.getElementById('shorten-btn').hidden = true
@@ -75,7 +76,8 @@ async function getLongURL(shortURL) {
 
 async function goToUrl(shortURL) {
     let longURL = await getLongURL(shortURL)
-    window.location = longURL //window.open can redirect to about:blank
+    //window.location = longURL //window.open can redirect to about:blank
+    window.open(longURL)
 }
 
 function copyToClipboard(element) {
