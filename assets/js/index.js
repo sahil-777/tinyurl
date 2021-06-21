@@ -1,41 +1,40 @@
-function getShortUrl() {
+async function getShortUrl() {
     let longUrl = document.getElementById('input-output').value
 
     if (isURLValid(longUrl)) { //check if url is valid or not
-
-        $.ajax({
-            type: "POST",
-            url: 'http://localhost:3000/api/getShortUrl',
-            data: {
-                'longUrl': longUrl
-            },
-            success: function (responseData) {
-                if(responseData.statusCode==201){
-                    let shortKey = responseData.shortKey;
-                    let shortURL = 'http://localhost:3000/'+shortKey
-                    document.getElementById('input-output').value = shortURL
-                    document.getElementById('copy-btn').hidden = false
-                    document.getElementById('shorten-btn').hidden = true
-                    document.getElementById('check-btn').hidden = false
-                    document.getElementById('shorten-another-btn').hidden = false
+        let response;
+        try {
+            response=await axios({
+                method: 'post',
+                url: 'https://99dk65tgz5.execute-api.us-east-1.amazonaws.com/api/getshorturl',
+                data: {
+                  longURL: longUrl
                 }
-                else{
-                    let errorMsg = responseData.msg
-                    document.getElementById('error-msg').innerText = errorMsg + '. Please, try again later'
-                    setTimeout(() => {
-                        document.getElementById('error-msg').innerText = '';
-                    }, 2500)   
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus + ": " + jqXHR.status + " " + errorThrown);
+              });            
+        } catch (error) {
                 document.getElementById('error-msg').innerText = errorThrown + '. Please, try again later'
                 setTimeout(() => {
                     document.getElementById('error-msg').innerText = '';
                 }, 2500)
-            }
-        })
-
+                return
+        }
+        response=response.data
+        if(response.statusCode==201){
+            let shortKey = response.shortKey;
+            let shortURL = 'http://localhost:3000/'+shortKey
+            document.getElementById('input-output').value = shortURL
+            document.getElementById('copy-btn').hidden = false
+            document.getElementById('shorten-btn').hidden = true
+            document.getElementById('check-btn').hidden = false
+            document.getElementById('shorten-another-btn').hidden = false
+        }
+        else{
+            let errorMsg = response.msg
+            document.getElementById('error-msg').innerText = errorMsg + '. Please, try again later'
+            setTimeout(() => {
+                document.getElementById('error-msg').innerText = '';
+            }, 2500)   
+        }
     } else {
         document.getElementById('error-msg').innerText = 'Please,enter valid url'
         setTimeout(() => {
