@@ -12,7 +12,7 @@
     <script src="./assets/lib/axios.min.js"></script>
     <script src="./assets/js/index.js"></script>
 </head>
-<body>
+<body onload="initiate()">
     <input id="input-output" type="url" autocomplete="off" size="80">
     <button hidden id="copy-btn" onclick="copyToClipboard('#input-output')">Copy</button>
     <button id="shorten-btn" onclick="getShortUrl()">Shorten</button>
@@ -23,7 +23,7 @@
     <br><br>
 
     <!--This will be invisible first-->    
-    <button hidden id="check-btn" onclick="goToUrl()">Check</button>
+    <button hidden id="check-btn" onclick="goToUrl(document.getElementById('input-output').value)">Check</button>
     <button hidden id="shorten-another-btn" onclick="window.location.reload()">Shorten Another</button>
 </body>
 </html>

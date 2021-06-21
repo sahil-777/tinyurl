@@ -1,39 +1,50 @@
+async function initiate() {
+    //let shortKey=location.href.split('/').pop().split('?').pop()
+    let shortKey = location.href.split('?')[1]
+    console.log(shortKey)
+    if (shortKey) {
+        let longURL = await getLongURL(location.href)
+        window.location = longURL
+    }
+}
+
 async function getShortUrl() {
     let longUrl = document.getElementById('input-output').value
 
     if (isURLValid(longUrl)) { //check if url is valid or not
         let response;
         try {
-            response=await axios({
+            response = await axios({
                 method: 'post',
                 url: 'https://99dk65tgz5.execute-api.us-east-1.amazonaws.com/api/getshorturl',
                 data: {
-                  longURL: longUrl
+                    longURL: longUrl
                 }
-              });            
+            });
         } catch (error) {
-                document.getElementById('error-msg').innerText = errorThrown + '. Please, try again later'
-                setTimeout(() => {
-                    document.getElementById('error-msg').innerText = '';
-                }, 2500)
-                return
+            document.getElementById('error-msg').innerText = errorThrown + '. Please, try again later'
+            setTimeout(() => {
+                document.getElementById('error-msg').innerText = '';
+            }, 2500)
+            return
         }
-        response=response.data
-        if(response.statusCode==201){
+        response = response.data
+        if (response.statusCode == 201) {
             let shortKey = response.shortKey;
-            let shortURL = window.location.href+shortKey // Add '/', if u r running locally
+            let shortURL = "https://sahil-777.github.io/tinyurl/" + '?' + shortKey // Add '/', if u r running locally
+            //window.location.href can produce bug
+
             document.getElementById('input-output').value = shortURL
             document.getElementById('copy-btn').hidden = false
             document.getElementById('shorten-btn').hidden = true
             document.getElementById('check-btn').hidden = false
             document.getElementById('shorten-another-btn').hidden = false
-        }
-        else{
+        } else {
             let errorMsg = response.msg
             document.getElementById('error-msg').innerText = errorMsg + '. Please, try again later'
             setTimeout(() => {
                 document.getElementById('error-msg').innerText = '';
-            }, 2500)   
+            }, 2500)
         }
     } else {
         document.getElementById('error-msg').innerText = 'Please,enter valid url'
@@ -43,9 +54,30 @@ async function getShortUrl() {
     }
 }
 
-function goToUrl() {
-    let url = document.getElementById('input-output').value;
-    window.open(url) //will be opened in new tab
+async function getLongURL(shortURL) {
+    //let url = document.getElementById('input-output').value;
+    //window.open(longURL) //will be opened in new tab
+    let mainAddress = 'https://sahil-777.github.io/tinyurl/' //Bug => shortURL.split('?')[0]
+    let shortKey = shortURL.split('?')[1]
+    //console.log(shortKey)
+    let longURL = ''
+    try {
+        let response = await axios.get('https://99dk65tgz5.execute-api.us-east-1.amazonaws.com/api/getlongurl/' + shortKey)
+        if (response.data.statusCode == 200)
+            longURL = response.data.longUrl;
+        else {
+            longURL = mainAddress + 'error-page.html'
+        }
+    } catch (error) {
+        longURL = mainAddress + 'error-page.html'
+    }
+    return longURL;
+}
+
+async function goToUrl(shortURL) {
+    let longURL = await getLongURL(shortURL)
+    //window.location = longURL //window.open can redirect to about:blank
+    window.open(longURL)
 }
 
 function copyToClipboard(element) {
