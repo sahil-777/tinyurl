@@ -1,7 +1,6 @@
 async function initiate() {
     //let shortKey=location.href.split('/').pop().split('?').pop()
     let shortKey = location.href.split('?')[1]
-    console.log(shortKey)
     if (shortKey) {
         let longURL = await getLongURL(location.href)
         window.location = longURL
