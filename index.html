@@ -8,23 +8,32 @@
 
     <!-- Libraries, stylesheets, client side js files -->
     <link rel="stylesheet" type="text/css" href="./assets/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="./assets/css/util-functions.css"/>
+
     <script src="./assets/lib/jquery.min.js"></script>
     <script src="./assets/lib/axios.min.js"></script>
     <script src="./assets/js/index.js"></script>
 </head>
 <body onload="initiate()">
-    <input id="input-output" type="url" autocomplete="off" size="80">
-    <button hidden id="copy-btn" onclick="copyToClipboard('#input-output')">Copy</button>
-    <button id="shorten-btn" onclick="getShortUrl()">Shorten</button>
     
-    <!--Error message-->
-    <p id="error-msg"></p>
+    <a href="https://github.com/sahil-777/tinyurl"><img  height="40px" width="98px" style="position: fixed;margin-left: 82%;margin-top: 10px;" src="./assets/images/GitHub_Logo.png"></a>
+    <img style="position: fixed;margin-left: 400px;margin-top: 50px;" src="./assets/images/logo.png" height="188px" width="188px">
+    <p style="position: fixed;margin-left: 600px;margin-top: 100px;font-size:80px;">tinyURL</p>
+    <br><br><br><br><br><br><br><br><br><br> 
+    <div class="input-container">
+        <input id="input-output" autocomplete="off" type="text" placeholder="Shorten a link here..." aria-label="input a link to be shortened here">
+        <p id="error-msg"></p>
+        <a class="btn btn-color btn-main" id="shorten-it__btn" onclick="getShortUrl()">Shorten It!</a>
+        <a style="display: none;" class="btn btn-color btn-main" id="copy-btn" onclick="copyToClipboard('#input-output')">Copy</a>
+    </div>  
+ 
+    <br><br><br><br> 
 
-    <br><br>
+    <div class="util-container">
+        <button style="display: none;" class="util-btn util-btn-color" id="check-btn" onclick="goToUrl(document.getElementById('input-output').value)">Check</button>
+        <button style="display: none;" class="util-btn util-btn-color" id="shorten-another-btn" onclick="window.location.reload()">Shorten Another</button>
+    </div>
 
-    <!--This will be invisible first-->    
-    <button hidden id="check-btn" onclick="goToUrl(document.getElementById('input-output').value)">Check</button>
-    <button hidden id="shorten-another-btn" onclick="window.location.reload()">Shorten Another</button>
 </body>
 </html>
 
