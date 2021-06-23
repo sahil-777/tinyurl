@@ -35,10 +35,11 @@ async function getShortUrl() {
             //window.location.href can produce bug
 
             document.getElementById('input-output').value = shortURL
-            document.getElementById('copy-btn').hidden = false
-            document.getElementById('shorten-btn').hidden = true
-            document.getElementById('check-btn').hidden = false
-            document.getElementById('shorten-another-btn').hidden = false
+            document.getElementById('input-output').readOnly = true
+            document.getElementById('shorten-it__btn').style.display = 'none'
+            document.getElementById('copy-btn').style.display = 'flex'
+            document.getElementById('shorten-another-btn').style.display = 'flex'
+            document.getElementById('check-btn').style.display = 'flex'
         } else {
             let errorMsg = response.msg
             document.getElementById('error-msg').innerText = errorMsg + '. Please, try again later'
@@ -87,6 +88,9 @@ function copyToClipboard(element) {
     document.execCommand("copy");
     $temp.remove();
     document.getElementById('copy-btn').innerText = 'Copied'
+    setTimeout(() => {
+        document.getElementById('copy-btn').innerText = 'Copy';
+    }, 1500)
 }
 
 function isURLValid(url) {

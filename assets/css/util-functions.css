@@ -1,0 +1,39 @@
+.util-container>.util-btn {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 20px;
+    max-width: 200px;
+    border-radius: 8px;
+    height: 60px;
+    padding: 20px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    margin-right: 15px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.util-container>.util-btn-color {
+    background-color: #2acfcf;
+    color: white;
+    -webkit-box-shadow: 0 4px 8px rgba(42, 207, 207, 0.05);
+    box-shadow: 0 4px 8px rgba(42, 207, 207, 0.05);
+    transition: background-color 200ms;
+}
+
+.util-container>.util-btn-color:hover {
+    background-color: #9ce3e2;
+}
+
+.util-container>.util-btn-color:active {
+    background-color: #2acfcf;
+}
+
+.util-container {
+    display: inline-flex;
+    margin-left: 176px;
+}
