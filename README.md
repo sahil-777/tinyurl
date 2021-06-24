@@ -5,12 +5,17 @@
 <p align="center">  A serverless web app to shorten the long URL
     <br> 
 </p>
-<div align="center">
+
 <!--
+<div align="center">
   # DEMO 
   - [Yet to be added](Link) - See Video
--->
 </div>
+-->
+
+## 🖥️ Live 
+- https://sahil-777.github.io/tinyurl
+
  
 ## ⛏️ Built With <a name = "tech_stack"></a>
 - [AWS Lambda](https://aws.amazon.com/lambda/?nc2=h_ql_prod_fs_lbd) - Serverless computing platform
