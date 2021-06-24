@@ -78,12 +78,12 @@
         => Search Bar: 
             User can find other people. 
 -->
-## ✔️ Functionality
+## ✔️ Functionalities
     ❖ Enter any LongURL to shorten it into shortURL
     ❖ Retrive original LongURL from shortURL by visiting it 
 
-## ✍️ Authors <a name = "authors"></a>
-- [@Sahil Velhal](https://github.com/sahil-777) 
+## ✍️ Author(s) <a name = "authors"></a>
+- [@Sahil Velhal](https://sahil-777.github.io) 
 
 ## 🎉 Acknowledgments <a name = "acknowledgments"></a>
 - [Tushar Roy System Design](https://www.youtube.com/watch?v=fMZMm_0ZhK4)
