@@ -11,6 +11,9 @@ async function getShortUrl() {
     let longUrl = document.getElementById('input-output').value
 
     if (isURLValid(longUrl)) { //check if url is valid or not
+        //loader
+        document.getElementById('shorten-it__btn').innerHTML=`<div class="lds-ring"><div></div><div></div><div></div><div></div></div>`;
+      
         let response;
         try {
             response = await axios({
